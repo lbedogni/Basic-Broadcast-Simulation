@@ -3,6 +3,7 @@
 	<name>Basic</name>
 	<comment></comment>
 	<projects>
+		<project>inet-sommer</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
