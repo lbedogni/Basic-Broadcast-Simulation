@@ -5,9 +5,12 @@
 
 class Flooding : public cSimpleModule
 {
-  protected:
-    void initialize();
-    void handleMessage(cMessage *msg);
+	public:
+		Flooding();
+	    virtual ~Flooding();
+	protected:
+	    void initialize();
+	    void handleMessage(cMessage *msg);
 
 };
 

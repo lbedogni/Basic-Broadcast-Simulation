@@ -1,4 +1,19 @@
-#include "Flooding.h"
+#include <omnetpp.h>
+
+class Flooding : public cSimpleModule
+{
+	public:
+		Flooding();
+	    virtual ~Flooding();
+	protected:
+	    virtual void initialize();
+	    virtual void handleMessage(cMessage *msg);
+
+};
+
+Flooding::Flooding() {}
+
+Flooding::~Flooding() {}
 
 Define_Module( Flooding );
 
