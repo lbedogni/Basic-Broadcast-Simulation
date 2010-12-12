@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for Basic-Broadcast-Simulation
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -I../../inet-sommer/src/networklayer/ipv4 -I../../inet-sommer/src/networklayer/ted -I../../inet-sommer/src/transport/tcp -I../../inet-sommer/src/transport/contract -I../../inet-sommer/src/linklayer/contract -I../../inet-sommer/src/linklayer/mfcore -I../../inet-sommer/src/transport/sctp -I../../inet-sommer/src/networklayer/contract -I../../inet-sommer/src/applications/pingapp -I../../inet-sommer/src/transport/udp -I../../inet-sommer/src/networklayer/ipv6 -I../../inet-sommer/src/util -I../../inet-sommer/src/world -I../../inet-sommer/src/networklayer/arp -I../../inet-sommer/src/networklayer/rsvp_te -I../../inet-sommer/src/networklayer/icmpv6 -I../../inet-sommer/src/networklayer/ldp -I../../inet-sommer/src/networklayer/mpls -I../../inet-sommer/src/base -I../../inet-sommer/src/networklayer/common -I../../inet-sommer/src/util/headerserializers -L../../inet-sommer/out/$(CONFIGNAME)/src -linet -KINET_SOMMER_PROJ=../../inet-sommer
+#  opp_makemake -f --deep -I/home/bedo/omnetpp/samples/inet-sommer/src/transport/contract -I/home/bedo/omnetpp/samples/inet-sommer/src/transport/contract -I../../inet-sommer/src/networklayer/ipv4 -I../../inet-sommer/src/networklayer/ted -I../../inet-sommer/src/transport/tcp -I../../inet-sommer/src/linklayer/contract -I../../inet-sommer/src/linklayer/mfcore -I../../inet-sommer/src/transport/sctp -I../../inet-sommer/src/networklayer/contract -I../../inet-sommer/src/applications/pingapp -I../../inet-sommer/src/transport/udp -I../../inet-sommer/src/networklayer/ipv6 -I../../inet-sommer/src/util -I../../inet-sommer/src/world -I../../inet-sommer/src/networklayer/arp -I../../inet-sommer/src/networklayer/rsvp_te -I../../inet-sommer/src/networklayer/icmpv6 -I../../inet-sommer/src/networklayer/ldp -I../../inet-sommer/src/networklayer/mpls -I../../inet-sommer/src/base -I../../inet-sommer/src/networklayer/common -I../../inet-sommer/src/util/headerserializers -L../../inet-sommer/out/$(CONFIGNAME)/src -linet -KINET_SOMMER_PROJ=../../inet-sommer
 #
 
 # Name of target to be created (-o option)
@@ -15,10 +15,11 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(CMDENV_LIBS)
 
 # C++ include paths (with -I)
 INCLUDE_PATH = \
+    -I$(INET_SOMMER_PROJ)/src/transport/contract \
+    -I$(INET_SOMMER_PROJ)/src/transport/contract \
     -I../../inet-sommer/src/networklayer/ipv4 \
     -I../../inet-sommer/src/networklayer/ted \
     -I../../inet-sommer/src/transport/tcp \
-    -I../../inet-sommer/src/transport/contract \
     -I../../inet-sommer/src/linklayer/contract \
     -I../../inet-sommer/src/linklayer/mfcore \
     -I../../inet-sommer/src/transport/sctp \

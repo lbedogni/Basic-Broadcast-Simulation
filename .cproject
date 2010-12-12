@@ -24,22 +24,54 @@
 <builder id="org.omnetpp.cdt.gnu.builder.debug.1865798102" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="OMNeT++ Make Builder (opp_makemake)" stopOnErr="false" superClass="org.omnetpp.cdt.gnu.builder.debug"/>
 <tool id="cdt.managedbuild.tool.gnu.archiver.base.1807258794" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1536764959" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
-<option id="gnu.cpp.compiler.option.include.paths.712858603" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath"/>
+<option id="gnu.cpp.compiler.option.include.paths.712858603" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="/home/bedo/omnetpp/samples/inet-sommer/src/transport/contract"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1914319346" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.base.782339428" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
+<option id="gnu.c.compiler.option.include.paths.423661298" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="/home/bedo/omnetpp/samples/inet-sommer/src/transport/contract"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet-sommer/out/gcc-debug/src}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1620064072" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.linker.base.70798601" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1391536319" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
+<option id="gnu.cpp.link.option.paths.1455048528" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+<listOptionValue builtIn="false" value="/home/bedo/omnetpp/samples/inet-sommer/out/gcc-debug/src/transport/contract"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.844899142" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 <additionalInput kind="additionalinput" paths="$(LIBS)"/>
 </inputType>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.assembler.base.1623987870" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base">
-<option id="gnu.both.asm.option.include.paths.804566813" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath"/>
+<option id="gnu.both.asm.option.include.paths.804566813" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet-sommer/src/transport/contract}&quot;"/>
+<listOptionValue builtIn="false" value="/home/bedo/omnetpp/samples/inet-sommer/src/transport/contract"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.1344750918" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+</tool>
+</toolChain>
+</folderInfo>
+<folderInfo id="org.omnetpp.cdt.gnu.config.debug.49961430.1026776217" name="/" resourcePath="src">
+<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.1783009120" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug" unusedChildren="">
+<tool id="cdt.managedbuild.tool.gnu.archiver.base.586713676" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1807258794"/>
+<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1748265606" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.1536764959">
+<option id="gnu.cpp.compiler.option.include.paths.923083590" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet-sommer/src/transport/contract}&quot;"/>
+<listOptionValue builtIn="false" value="/home/bedo/omnetpp/samples/inet-sommer/src/transport/contract"/>
+</option>
+<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2144641128" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+</tool>
+<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.1568595519" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.782339428">
+<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.792662881" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+</tool>
+<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1415970574" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.70798601"/>
+<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1311393649" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.1391536319"/>
+<tool id="cdt.managedbuild.tool.gnu.assembler.base.2006830673" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.1623987870">
+<inputType id="cdt.managedbuild.tool.gnu.assembler.input.2120993582" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
 </toolChain>
 </folderInfo>
