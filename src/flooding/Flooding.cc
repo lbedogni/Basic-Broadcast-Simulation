@@ -1,29 +1,109 @@
-#include <omnetpp.h>
+/*
+ *  Copyright (C) 2010 Christoph Sommer <christoph.sommer@informatik.uni-erlangen.de>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-class Flooding : public cSimpleModule
-{
-	public:
-		Flooding();
-	    virtual ~Flooding();
-	protected:
-	    virtual void initialize();
-	    virtual void handleMessage(cMessage *msg);
+#include <algorithm>
+#include <numeric>
 
-};
+#include "Flooding.h"
+//#include "NotificationBoard.h"
 
-Flooding::Flooding() {}
 
-Flooding::~Flooding() {}
+Define_Module(Flooding);
 
-Define_Module( Flooding );
-
-void Flooding::initialize()
-{
-	ev << "Flooding.initialize();";
-	cMessage *msg = new cMessage("Message");
-	send(msg, "lowerOUT");
+Flooding::~Flooding() {
 }
 
-void Flooding::handleMessage(cMessage *msg) {
-    send(msg, "lowerOUT");
+void Flooding::initialize(int aStage) {
+
+	cSimpleModule::initialize(aStage);
+
+	if (0 == aStage) {
+		debug = par("debug");
+
+//		traci = TraCIMobilityAccess().get();
+		triggeredFlooding = false;
+
+//		NotificationBoard* nb = NotificationBoardAccess().get();
+//		nb->subscribe(this, NF_HOSTPOSITION_UPDATED);
+
+		setupLowerLayer();
+	}
+}
+
+void Flooding::setupLowerLayer() {
+	cMessage *msg = new cMessage("UDP_C_BIND", UDP_C_BIND);
+	UDPControlInfo *ctrl = new UDPControlInfo();
+	ctrl->setSrcPort(12345);
+	ctrl->setSockId(UDPSocket::generateSocketId());
+	msg->setControlInfo(ctrl);
+	send(msg, "udp$o");
+}
+
+void Flooding::finish() {
+}
+
+void Flooding::receiveChangeNotification(int category, const cPolymorphic *details) {
+	Enter_Method("receiveChangeNotification()");
+
+//	if (category == NF_HOSTPOSITION_UPDATED) {
+//		handlePositionUpdate();
+//	} else {
+//		error("should only be subscribed to NF_HOSTPOSITION_UPDATED, but received notification of category %d", category);
+//	}
+}
+
+void Flooding::handleMessage(cMessage* apMsg) {
+	if (apMsg->isSelfMessage()) {
+		handleSelfMsg(apMsg);
+	} else {
+		handleLowerMsg(apMsg);
+	}
+}
+
+void Flooding::handleSelfMsg(cMessage* apMsg) {
+}
+
+void Flooding::handleLowerMsg(cMessage* apMsg) {
+	if (cPacket* m = dynamic_cast<cPacket*>(apMsg)) {
+		sendMessage();
+	}
+
+	delete apMsg;
+}
+
+void Flooding::handlePositionUpdate() {
+//	if ((traci->getPosition().x < 7350) && (!triggeredFlooding)) {
+//		triggeredFlooding = true;
+//
+//		sendMessage();
+//	}
+}
+
+void Flooding::sendMessage() {
+	cPacket* newMessage = new cPacket();
+
+	newMessage->setKind(UDP_C_DATA);
+	UDPControlInfo *ctrl = new UDPControlInfo();
+	ctrl->setSrcPort(12345);
+	ctrl->setDestAddr(IPAddress::ALL_HOSTS_MCAST);
+	ctrl->setDestPort(12345);
+	delete(newMessage->removeControlInfo());
+	newMessage->setControlInfo(ctrl);
+
+	sendDelayed(newMessage, 0.010, "udp$o");
 }

@@ -22,6 +22,7 @@ import inet.base.NotificationBoard;
 import inet.networklayer.common.InterfaceTable;
 import inet.mobility.traci.TraCIMobility;
 import inet.networklayer.ipv4.RoutingTable;
+import inet.transport.udp.UDP;
 import basic.flooding.Flooding;
 import inet.nodes.inet.NetworkLayer;
 import inet.linklayer.mf80211.Nic80211;
@@ -30,49 +31,60 @@ module Car
 {
     parameters:
 
-        @display("bgb=424,541");
+        @display("bgb=424,381");
     gates:
         input radioIn;
 
     submodules:
         notificationBoard: NotificationBoard {
             parameters:
-                @display("p=140,462;i=block/control");
+                @display("p=60,193;i=block/control");
         }
         interfaceTable: InterfaceTable {
             parameters:
-                @display("p=140,326;i=block/table");
+                @display("p=60,34;i=block/table");
         }
         mobility: TraCIMobility {
             parameters:
-                @display("p=60,459;i=block/cogwheel");
+                @display("p=60,269;i=block/cogwheel");
         }
         routingTable: RoutingTable {
             parameters:
                 IPForward = true;
                 routerId = "";
                 routingFile = "";
-                @display("p=60,326;i=block/table");
+                @display("p=60,113;i=block/table");
+        }
+        udp: UDP {
+            parameters:
+                @display("p=339,113;i=block/transport");
         }
         flooding: Flooding {
-            parameters:
-                @display("p=384,146;i=block/transport");
+
+            @display("p=339,33;i=abstract/people2");
         }
         networkLayer: NetworkLayer {
             parameters:
                 proxyARP = false;
-                @display("p=304,327;i=block/fork;q=queue");
+                @display("p=259,193;i=block/fork;q=queue");
             gates:
                 ifIn[1];
                 ifOut[1];
         }
         wlan: Nic80211 {
             parameters:
-                @display("p=304,461;q=queue;i=block/ifcard");
+                @display("p=259,327;q=queue;i=block/ifcard");
         }
     connections allowunconnected:
-        flooding.lowerOUT --> networkLayer.udpIn;
-        flooding.lowerIN <-- networkLayer.udpOut;
+//        udp.appOut++ --> flooding.lowerIN;
+//        udp.appIn++ <-- flooding.lowerOUT;
+
+        udp.appOut++ --> flooding.udp$i;
+        udp.appIn++ <-- flooding.udp$o;
+
+
+        udp.ipOut --> networkLayer.udpIn;
+        udp.ipIn <-- networkLayer.udpOut;
 
         wlan.uppergateOut --> networkLayer.ifIn[0];
         wlan.uppergateIn <-- networkLayer.ifOut[0];
