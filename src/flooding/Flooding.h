@@ -5,8 +5,15 @@
 #include <map>
 #include "UDPControlInfo_m.h"
 #include "UDPSocket.h"
+#include "NotificationBoard.h"
+#include "TraCIMobility.h"
 
-class Flooding : public cSimpleModule {
+class Flooding : public BasicModule {
+	private:
+		long numSent;
+		long numReceived;
+		cLongHistogram hopCountStats;
+		cOutVector hopCountVector;
 	public:
 		Flooding() {}
 		~Flooding();
@@ -26,6 +33,8 @@ class Flooding : public cSimpleModule {
 		virtual void sendMessage();
 
 		bool debug;
+
+		TraCIMobility* traci;
 
 		bool triggeredFlooding;
 };

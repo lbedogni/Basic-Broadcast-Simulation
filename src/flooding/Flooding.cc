@@ -20,8 +20,6 @@
 #include <numeric>
 
 #include "Flooding.h"
-//#include "NotificationBoard.h"
-
 
 Define_Module(Flooding);
 
@@ -35,14 +33,15 @@ void Flooding::initialize(int aStage) {
 	if (0 == aStage) {
 		debug = par("debug");
 
-//		traci = TraCIMobilityAccess().get();
+		traci = TraCIMobilityAccess().get();
 		triggeredFlooding = false;
 
-//		NotificationBoard* nb = NotificationBoardAccess().get();
-//		nb->subscribe(this, NF_HOSTPOSITION_UPDATED);
+		NotificationBoard* nb = NotificationBoardAccess().get();
+		nb->subscribe(this, NF_HOSTPOSITION_UPDATED);
 
 		setupLowerLayer();
 	}
+	WATCH(numSent);
 }
 
 void Flooding::setupLowerLayer() {
@@ -55,19 +54,33 @@ void Flooding::setupLowerLayer() {
 }
 
 void Flooding::finish() {
+	    // This function is called by OMNeT++ at the end of the simulation.
+	    EV << "Sent:     " << numSent << endl;
+	    EV << "Received: " << numReceived << endl;
+	    EV << "Hop count, min:    " << hopCountStats.getMin() << endl;
+	    EV << "Hop count, max:    " << hopCountStats.getMax() << endl;
+	    EV << "Hop count, mean:   " << hopCountStats.getMean() << endl;
+	    EV << "Hop count, stddev: " << hopCountStats.getStddev() << endl;
+
+	    recordScalar("#sent", numSent);
+	    recordScalar("#received", numReceived);
+
+	    hopCountStats.recordAs("hop count");
 }
 
 void Flooding::receiveChangeNotification(int category, const cPolymorphic *details) {
 	Enter_Method("receiveChangeNotification()");
 
-//	if (category == NF_HOSTPOSITION_UPDATED) {
-//		handlePositionUpdate();
-//	} else {
-//		error("should only be subscribed to NF_HOSTPOSITION_UPDATED, but received notification of category %d", category);
-//	}
+	if (category == NF_HOSTPOSITION_UPDATED) {
+		handlePositionUpdate();
+	} else {
+		error("should only be subscribed to NF_HOSTPOSITION_UPDATED, but received notification of category %d", category);
+	}
 }
 
 void Flooding::handleMessage(cMessage* apMsg) {
+	hopCountVector.record(apMsg->getArrivalTime() - apMsg->getCreationTime());
+	hopCountStats.collect(apMsg->getArrivalTime() - apMsg->getCreationTime());
 	if (apMsg->isSelfMessage()) {
 		handleSelfMsg(apMsg);
 	} else {
@@ -87,11 +100,10 @@ void Flooding::handleLowerMsg(cMessage* apMsg) {
 }
 
 void Flooding::handlePositionUpdate() {
-//	if ((traci->getPosition().x < 7350) && (!triggeredFlooding)) {
-//		triggeredFlooding = true;
-//
-//		sendMessage();
-//	}
+	if ((traci->getPosition().x < 7350) && (!triggeredFlooding)) {
+		triggeredFlooding = true;
+		sendMessage();
+	}
 }
 
 void Flooding::sendMessage() {
