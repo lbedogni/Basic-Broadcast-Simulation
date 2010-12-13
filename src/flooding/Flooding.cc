@@ -27,6 +27,7 @@ Flooding::~Flooding() {
 }
 
 void Flooding::initialize(int aStage) {
+	// Just setup all the stuff
 
 	cSimpleModule::initialize(aStage);
 
@@ -45,6 +46,7 @@ void Flooding::initialize(int aStage) {
 }
 
 void Flooding::setupLowerLayer() {
+	// Setup UDP _at the moment_. We have to move to MAC layer later.
 	cMessage *msg = new cMessage("UDP_C_BIND", UDP_C_BIND);
 	UDPControlInfo *ctrl = new UDPControlInfo();
 	ctrl->setSrcPort(12345);
@@ -54,21 +56,22 @@ void Flooding::setupLowerLayer() {
 }
 
 void Flooding::finish() {
-	    // This function is called by OMNeT++ at the end of the simulation.
-	    EV << "Sent:     " << numSent << endl;
-	    EV << "Received: " << numReceived << endl;
-	    EV << "Hop count, min:    " << hopCountStats.getMin() << endl;
-	    EV << "Hop count, max:    " << hopCountStats.getMax() << endl;
-	    EV << "Hop count, mean:   " << hopCountStats.getMean() << endl;
-	    EV << "Hop count, stddev: " << hopCountStats.getStddev() << endl;
+	// This function is called by OMNeT++ at the end of the simulation.
+	EV << "Sent:     " << numSent << endl;
+	EV << "Received: " << numReceived << endl;
+	EV << "Hop count, min:    " << hopCountStats.getMin() << endl;
+	EV << "Hop count, max:    " << hopCountStats.getMax() << endl;
+	EV << "Hop count, mean:   " << hopCountStats.getMean() << endl;
+	EV << "Hop count, stddev: " << hopCountStats.getStddev() << endl;
 
-	    recordScalar("#sent", numSent);
-	    recordScalar("#received", numReceived);
+	recordScalar("#sent", numSent);
+	recordScalar("#received", numReceived);
 
-	    hopCountStats.recordAs("hop count");
+    hopCountStats.recordAs("hop count");
 }
 
 void Flooding::receiveChangeNotification(int category, const cPolymorphic *details) {
+	// Here we have to decide wheter to create the backbone or not
 	Enter_Method("receiveChangeNotification()");
 
 	if (category == NF_HOSTPOSITION_UPDATED) {
@@ -79,6 +82,7 @@ void Flooding::receiveChangeNotification(int category, const cPolymorphic *detai
 }
 
 void Flooding::handleMessage(cMessage* apMsg) {
+	// Handle it!
 	hopCountVector.record(apMsg->getArrivalTime() - apMsg->getCreationTime());
 	hopCountStats.collect(apMsg->getArrivalTime() - apMsg->getCreationTime());
 	if (apMsg->isSelfMessage()) {
@@ -89,9 +93,11 @@ void Flooding::handleMessage(cMessage* apMsg) {
 }
 
 void Flooding::handleSelfMsg(cMessage* apMsg) {
+	// Awake
 }
 
 void Flooding::handleLowerMsg(cMessage* apMsg) {
+	// Decide the backbone maintenance
 	if (cPacket* m = dynamic_cast<cPacket*>(apMsg)) {
 		sendMessage();
 	}
@@ -100,6 +106,7 @@ void Flooding::handleLowerMsg(cMessage* apMsg) {
 }
 
 void Flooding::handlePositionUpdate() {
+	// We're moving. Maybe here we can add all the speed-decision related stuff.
 	if ((traci->getPosition().x < 7350) && (!triggeredFlooding)) {
 		triggeredFlooding = true;
 		sendMessage();
@@ -107,6 +114,7 @@ void Flooding::handlePositionUpdate() {
 }
 
 void Flooding::sendMessage() {
+	// Send a message. Maybe a DBA-MAC_msg
 	cPacket* newMessage = new cPacket();
 
 	newMessage->setKind(UDP_C_DATA);
