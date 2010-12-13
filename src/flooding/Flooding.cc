@@ -42,6 +42,7 @@ void Flooding::initialize(int aStage) {
 
 		setupLowerLayer();
 	}
+	status = BACKBONE_NOT_MEMBER;
 	WATCH(numSent);
 }
 
@@ -75,6 +76,7 @@ void Flooding::receiveChangeNotification(int category, const cPolymorphic *detai
 	Enter_Method("receiveChangeNotification()");
 
 	if (category == NF_HOSTPOSITION_UPDATED) {
+		// ATM, we try to create the backbone every time we move. Funny right?
 		handlePositionUpdate();
 	} else {
 		error("should only be subscribed to NF_HOSTPOSITION_UPDATED, but received notification of category %d", category);
@@ -85,6 +87,13 @@ void Flooding::handleMessage(cMessage* apMsg) {
 	// Handle it!
 	hopCountVector.record(apMsg->getArrivalTime() - apMsg->getCreationTime());
 	hopCountStats.collect(apMsg->getArrivalTime() - apMsg->getCreationTime());
+
+	ev << "RECEIVED MESSAGE!!!!!" << endl;
+
+	DBA_MAC *packet = check_and_cast<DBA_MAC*>(apMsg->getObject(BACKBONE_MESSAGE_NAME));
+
+	ev << "Received message from " << packet->getId() << ", containing " << packet->getDBA_message();
+
 	if (apMsg->isSelfMessage()) {
 		handleSelfMsg(apMsg);
 	} else {
@@ -93,7 +102,7 @@ void Flooding::handleMessage(cMessage* apMsg) {
 }
 
 void Flooding::handleSelfMsg(cMessage* apMsg) {
-	// Awake
+	// Here we must wake up when receiving a message and computing the fit factor.
 }
 
 void Flooding::handleLowerMsg(cMessage* apMsg) {
@@ -107,10 +116,15 @@ void Flooding::handleLowerMsg(cMessage* apMsg) {
 
 void Flooding::handlePositionUpdate() {
 	// We're moving. Maybe here we can add all the speed-decision related stuff.
-	if ((traci->getPosition().x < 7350) && (!triggeredFlooding)) {
-		triggeredFlooding = true;
-		sendMessage();
-	}
+	DBA_MAC *msg = new DBA_MAC();
+	msg->setDBA_message(BACKBONE_CREATION);
+
+	msg->setId(this->getId());
+
+//	if ((traci->getPosition().x < 7350) && (!triggeredFlooding)) {
+//		triggeredFlooding = true;
+	sendBackboneMessage(msg);
+//	}
 }
 
 void Flooding::sendMessage() {
@@ -126,4 +140,29 @@ void Flooding::sendMessage() {
 	newMessage->setControlInfo(ctrl);
 
 	sendDelayed(newMessage, 0.010, "udp$o");
+}
+
+void Flooding::sendBackboneMessage(DBA_MAC *msg) {
+	// Send a message. Maybe a DBA-MAC_msg
+	status = BACKBONE_MEMBER; // Put myself as a backbone member
+
+	cPacket* newPacket = new cPacket();
+	newPacket->setName(BACKBONE_MESSAGE_NAME);
+	newPacket->encapsulate(msg);
+
+	if (msg->getDBA_message() == BACKBONE_CREATION) {
+		ev << "BACKBONE EVENT: Backbone creation" << endl;
+	} else if (msg->getDBA_message() == BACKBONE_MAINTENANCE) {
+		ev << "BACKBONE EVENT: Backbone maintenance" << endl;
+	}
+
+	newPacket->setKind(UDP_C_DATA);
+	UDPControlInfo *ctrl = new UDPControlInfo();
+	ctrl->setSrcPort(12345);
+	ctrl->setDestAddr(IPAddress::ALLONES_ADDRESS);
+	ctrl->setDestPort(12345);
+	delete(newPacket->removeControlInfo());
+	newPacket->setControlInfo(ctrl);
+
+	sendDelayed(newPacket, 0.010, "udp$o");
 }

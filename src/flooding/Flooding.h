@@ -8,6 +8,10 @@
 #include "NotificationBoard.h"
 #include "TraCIMobility.h"
 
+// DBA-MAC related stuff
+#include "DBA-MAC_m.h"
+#include "DBA-MAC_constants.h"
+
 class Flooding : public BasicModule {
 	private:
 		long numSent;
@@ -31,12 +35,15 @@ class Flooding : public BasicModule {
 		virtual void handleLowerMsg(cMessage* apMsg);
 		virtual void handlePositionUpdate();
 		virtual void sendMessage();
+		virtual void sendBackboneMessage(DBA_MAC *msg);
 
 		bool debug;
 
 		TraCIMobility* traci;
 
 		bool triggeredFlooding;
+
+		int status;
 };
 
 #endif

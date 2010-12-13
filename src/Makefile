@@ -56,10 +56,11 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc and .msg files
-OBJS = $O/flooding/Flooding.o
+OBJS = $O/flooding/Flooding.o $O/flooding/DBA-MAC_m.o
 
 # Message files
-MSGFILES =
+MSGFILES = \
+    flooding/DBA-MAC.msg
 
 # Other makefile variables (-K)
 INET_SOMMER_PROJ=../../inet-sommer
@@ -139,11 +140,13 @@ $O/flooding/Flooding.o: flooding/Flooding.cc \
 	$(INET_SOMMER_PROJ)/src/networklayer/contract/IPvXAddress.h \
 	$(INET_SOMMER_PROJ)/src/transport/contract/UDPSocket.h \
 	$(INET_SOMMER_PROJ)/src/transport/contract/UDPControlInfo_m.h \
+	flooding/DBA-MAC_m.h \
 	$(INET_SOMMER_PROJ)/src/mobility/traci/TraCIMobility.h \
 	flooding/Flooding.h \
 	$(INET_SOMMER_PROJ)/src/networklayer/contract/IPv6Address.h \
 	$(INET_SOMMER_PROJ)/src/base/Coord.h \
 	$(INET_SOMMER_PROJ)/src/networklayer/contract/IPAddress.h \
+	flooding/DBA-MAC_constants.h \
 	$(INET_SOMMER_PROJ)/src/base/ModuleAccess.h \
 	$(INET_SOMMER_PROJ)/src/base/NotificationBoard.h \
 	$(INET_SOMMER_PROJ)/src/base/NotifierConsts.h \
@@ -153,4 +156,6 @@ $O/flooding/Flooding.o: flooding/Flooding.cc \
 	$(INET_SOMMER_PROJ)/src/base/INotifiable.h \
 	$(INET_SOMMER_PROJ)/src/world/ChannelControl.h \
 	$(INET_SOMMER_PROJ)/src/util/FWMath.h
+$O/flooding/DBA-MAC_m.o: flooding/DBA-MAC_m.cc \
+	flooding/DBA-MAC_m.h
 
