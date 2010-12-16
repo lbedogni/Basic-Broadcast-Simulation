@@ -23,7 +23,7 @@ import inet.networklayer.common.InterfaceTable;
 import inet.mobility.traci.TraCIMobility;
 import inet.networklayer.ipv4.RoutingTable;
 
-import basic.dbamac.ieee80211.mac.Ieee80211Mac;
+import inet.nodes.inet.NetworkLayer;
 import inet.linklayer.mf80211.Nic80211;
 
 module Car
@@ -53,17 +53,21 @@ module Car
                 routingFile = "";
                 @display("p=60,62;i=block/table");
         }
-//        mac: Ieee80211Mac {
-//            parameters:
-//                @display("p=304,62;i=block/mac");
-//        }
+        networkLayer: NetworkLayer {
+            parameters:
+                proxyARP = false;
+                @display("p=304,327;i=block/fork;q=queue");
+            gates:
+                ifIn[1];
+                ifOut[1];
+        }
         wlan: Nic80211 {
             parameters:
                 @display("p=304,197;q=queue;i=block/ifcard");
         }
     connections allowunconnected:
-//        wlan.uppergateOut --> mac.lowergateIn;
-//        wlan.uppergateIn <-- mac.lowergateOut;
+        wlan.uppergateOut --> networkLayer.ifIn[0];
+        wlan.uppergateIn <-- networkLayer.ifOut[0];
 
         radioIn --> wlan.radioIn;
 }
