@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Basic-Broadcast-Simulation</name>
+	<name>Basic</name>
 	<comment></comment>
 	<projects>
 		<project>inet-sommer</project>
@@ -34,7 +34,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildArguments</key>
-					<value>MODE=debug CONFIGNAME=${ConfigName} -k</value>
+					<value>MODE=debug CONFIGNAME=${ConfigName}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildCommand</key>
@@ -70,7 +70,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.stopOnError</key>
-					<value>false</value>
+					<value>true</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>

@@ -1,2 +1,2 @@
 // designate the NED package of this folder
-package basic;
+package mac;

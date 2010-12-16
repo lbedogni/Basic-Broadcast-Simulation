@@ -1,49 +1,17 @@
-#ifndef Flooding_H
-#define Flooding_H
+#ifndef __FLOODING_H
+#define __FLOODING_H
 
 #include <omnetpp.h>
-#include <map>
-#include "UDPControlInfo_m.h"
-#include "UDPSocket.h"
-#include "NotificationBoard.h"
-#include "TraCIMobility.h"
 
-// DBA-MAC related stuff
-#include "DBA-MAC_m.h"
-#include "DBA-MAC_constants.h"
-
-class Flooding : public BasicModule {
-	private:
-		long numSent;
-		long numReceived;
-		cLongHistogram hopCountStats;
-		cOutVector hopCountVector;
+class Flooding : public cSimpleModule
+{
 	public:
-		Flooding() {}
-		~Flooding();
-		virtual int numInitStages() const {
-			return std::max(4, cSimpleModule::numInitStages());
-		}
-		virtual void initialize(int);
-		virtual void finish();
-		virtual void receiveChangeNotification(int category, const cPolymorphic *details);
-		virtual void handleMessage(cMessage * msg);
-
+		Flooding();
+	    virtual ~Flooding();
 	protected:
-		void setupLowerLayer();
-		virtual void handleSelfMsg(cMessage* apMsg);
-		virtual void handleLowerMsg(cMessage* apMsg);
-		virtual void handlePositionUpdate();
-		virtual void sendMessage();
-		virtual void sendBackboneMessage(DBA_MAC *msg);
+	    void initialize();
+	    void handleMessage(cMessage *msg);
 
-		bool debug;
-
-		TraCIMobility* traci;
-
-		bool triggeredFlooding;
-
-		int status;
 };
 
 #endif
